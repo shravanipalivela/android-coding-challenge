@@ -12,5 +12,11 @@ Your task is to continue development reaching the following milestones:
 - upon clicking an item a new screen should open
 - BONUS the new screen should show a map at the countries capital
 
-Emphasize code quality, the HOW is what's important. 
-For what you wouldn't want to implement leave comments.
+Emphasize quality and testing, this should be a work sample that meets your standards.
+Leave comments for what you leave for later but deem important or any assumptions you make. 
+
+Also feel free to use this file to add general notes or whatever you would like to document. 
+
+# candidate space
+
+...
