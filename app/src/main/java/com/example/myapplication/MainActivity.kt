@@ -4,65 +4,49 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.myapplication.ui.screens.CountriesListView
+import com.example.myapplication.ui.screens.CountryDetailView
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val countriesList = MutableStateFlow(listOf<CountryDto>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            countriesList.update {
-                CountriesService.provide().getCountries()
-            }
-        }
-
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                val countries = countriesList.collectAsState()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                        items(countries.value) { item ->
-                            Text(item.name.common)
-                        }
-                    }
-                }
+                CountryApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun CountryApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "countryList") {
+        composable("countryList") {
+            CountriesListView(navController = navController)
+        }
+        composable(
+            "countryDetail/{countryName}",
+            arguments = listOf(navArgument("countryName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val countryName = backStackEntry.arguments?.getString("countryName")
+            if (countryName != null) {
+                CountryDetailView(countryName = countryName, navController = navController)
+            }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
+        }
     }
 }
+
