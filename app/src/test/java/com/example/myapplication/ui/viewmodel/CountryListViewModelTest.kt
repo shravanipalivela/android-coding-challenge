@@ -1,12 +1,15 @@
 package com.example.myapplication.ui.viewmodel
 
-import com.example.myapplication.data.repository.CountryRepository
+import com.example.myapplication.domain.model.Country
+import com.example.myapplication.domain.usecase.CountryUseCase
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -16,6 +19,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CountryListViewModelTest {
@@ -24,14 +29,15 @@ class CountryListViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private var repository: CountryRepository = mockk(relaxed = true)
+    private var usecase: CountryUseCase = mockk(relaxed = true)
+
     private lateinit var viewModel: CountryListViewModel
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
-        viewModel = CountryListViewModel(repository,dispatcher = testDispatcher)
+        viewModel = CountryListViewModel(usecase,dispatcher = testDispatcher)
     }
 
     @After
@@ -53,12 +59,12 @@ class CountryListViewModelTest {
         //Given
 
       val mockCountries = listOf(
-            CountryDto(CountryDto.Name("Germany"), listOf("Berlin"), 80000000, 357000.0, "🇩🇪"),
-            CountryDto(CountryDto.Name("France"), listOf("Paris"), 67000000, 640679.0, "🇫🇷")
+            Country(Country.Name("Germany"), listOf("Berlin"), 80000000, 357000.0, "🇩🇪"),
+          Country(Country.Name("France"), listOf("Paris"), 67000000, 640679.0, "🇫🇷")
         )
 
         // Mock repository response
-        coEvery { repository.loadCountries() } returns Result.success(mockCountries)
+        coEvery { usecase.loadCountries() } returns Result.success(mockCountries)
         advanceUntilIdle()
 
         //When
@@ -79,14 +85,14 @@ class CountryListViewModelTest {
 
         //Given
         val errorMessage = "Network error"
-        coEvery { repository.loadCountries() } returns Result.failure(Exception(errorMessage))
+        coEvery { usecase.loadCountries() } returns Result.failure(Exception(errorMessage))
 
         //When
         viewModel.loadCountries()
         advanceUntilIdle()
 
         //Then
-        val newState = viewModel.countriesState.first()
+        val newState = viewModel.countriesState.first { !it.isLoading }
         assertFalse(newState.isLoading)
         assertTrue(newState.countries.isEmpty())
         assertEquals("Network error", newState.error)

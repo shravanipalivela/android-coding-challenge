@@ -55,7 +55,7 @@ class CountryRepositoryIntegrationTest {
         mockWebServer.enqueue(mockResponse)
 
         // When
-        val result = countryRepository.loadCountries()
+        val result = countryRepository.loadCountriesDto()
 
         // Then
         //assertTrue(result.isSuccess)
@@ -83,12 +83,12 @@ class CountryRepositoryIntegrationTest {
         mockWebServer.enqueue(mockResponse)
 
         // When
-        val result = countryRepository.loadCountryDetails("Germany")
+        val result = countryRepository.loadCountryDtoDetails("Germany")
 
 
         // Then
         assertTrue(result.isSuccess)
-        val country = result.getOrDefault(null)
+        val country = result.getOrDefault(null)?.firstOrNull()
         assertNotNull(country)
         assertTrue(country?.name?.common == "Germany")
     }
@@ -98,17 +98,17 @@ class CountryRepositoryIntegrationTest {
         // Given
         val mockResponse = MockResponse()
             .setResponseCode(404)
-            .setBody("{\"error\":\"HTTP 404 Client Error\"}")
+            .setBody("{\"error\":\"Country not found\"}")
         mockWebServer.enqueue(mockResponse)
 
         // When
-        val result = countryRepository.loadCountryDetails("UnknownCountry")
+        val result = countryRepository.loadCountryDtoDetails("UnknownCountry")
 
         // Then
        assertTrue(result.isFailure)
         val exception = result.exceptionOrNull()
         if (exception != null) {
-            assertTrue(exception.message == "HTTP 404 Client Error")
+            assertTrue(exception.message == "Country not found")
         }
 
     }

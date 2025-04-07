@@ -1,7 +1,7 @@
 package com.example.myapplication.mapper
 
-import com.example.myapplication.data.mapper.toCountry
 import com.example.myapplication.data.model.CountryDto
+import com.example.myapplication.domain.mapper.toCountry
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

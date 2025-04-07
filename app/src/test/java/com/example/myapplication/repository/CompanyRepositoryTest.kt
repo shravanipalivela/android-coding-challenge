@@ -1,6 +1,5 @@
 package com.example.myapplication.repository
 
-import com.example.myapplication.data.mapper.toCountry
 import com.example.myapplication.data.model.CountryDto
 import com.example.myapplication.data.repository.CountryRepositoryImpl
 import com.example.myapplication.data.source.RemoteDataSource
@@ -24,10 +23,10 @@ class CountryRepositoryTest {
             CountryDto(CountryDto.Name("Germany"), listOf("Berlin"), 80000000, 357000.0, "🇩🇪"),
             CountryDto(CountryDto.Name("France"), listOf("Paris"), 67000000, 640679.0, "🇫🇷")
         )
-        coEvery{remoteDataSource.fetchCountries()} returns Result.success(mockCountries) // Mocking the remote call
+        coEvery{remoteDataSource.fetchCountriesDto()} returns Result.success(mockCountries) // Mocking the remote call
 
         // When
-        val result = repository.loadCountries()
+        val result = repository.loadCountriesDto()
 
         // Then
         assertTrue(result.isSuccess)
@@ -40,10 +39,10 @@ class CountryRepositoryTest {
     @Test
     fun `fetchCountries should return a failure result when the remote call fails`() = runBlocking {
         // Given
-        coEvery{remoteDataSource.fetchCountries()} returns Result.failure(Exception("Network error"))
+        coEvery{remoteDataSource.fetchCountriesDto()} returns Result.failure(Exception("Network error"))
 
         // When
-        val result = repository.loadCountries()
+        val result = repository.loadCountriesDto()
 
         // Then
         assertTrue(result.isFailure)
@@ -54,17 +53,19 @@ class CountryRepositoryTest {
     fun `fetchCountryDetails should return a success result with country details`(): Unit = runBlocking {
         // Given
 
-        val testCountryDto = CountryDto(CountryDto.Name("France"), listOf("Paris"), 67000000, 640679.0, "🇫🇷")
-        val domainModel = testCountryDto.toCountry()
+        val mockCountries = listOf(
+            CountryDto(CountryDto.Name("France"), listOf("Paris"), 67000000, 640679.0, "🇫🇷")
+        )
 
-        coEvery{remoteDataSource.fetchCountryByName("France")} returns Result.success(domainModel)
+
+        coEvery{remoteDataSource.fetchCountryDtoByName("France")} returns Result.success(mockCountries)
 
         //When
-        val result = repository.loadCountryDetails("France")
+        val result = repository.loadCountryDtoDetails("France")
 
         //Then
         assertTrue(result.isSuccess)
-        assertEquals("France", result.getOrNull()?.name?.common)
+        assertEquals("France", result.getOrNull()?.firstOrNull()?.name?.common)
     }
 
 
@@ -72,10 +73,10 @@ class CountryRepositoryTest {
     @Test
     fun `fetchCountryDetails should return a failure result when the remote call fails`() = runBlocking {
         // Given
-        coEvery{remoteDataSource.fetchCountryByName("nonExistentCountry")} returns Result.failure(Exception("Country not found"))
+        coEvery{remoteDataSource.fetchCountryDtoByName("nonExistentCountry")} returns Result.failure(Exception("Country not found"))
 
         // When
-        val result = repository.loadCountryDetails("nonExistentCountry")
+        val result = repository.loadCountryDtoDetails("nonExistentCountry")
 
         // Then
         assertTrue(result.isFailure)

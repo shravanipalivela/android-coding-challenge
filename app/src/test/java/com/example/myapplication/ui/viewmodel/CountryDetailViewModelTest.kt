@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.viewmodel
 
-import com.example.myapplication.data.model.Country
-import com.example.myapplication.data.repository.CountryRepository
+import com.example.myapplication.domain.model.Country
+import com.example.myapplication.domain.usecase.CountryUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +25,12 @@ class CountryDetailViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: CountryDetailViewModel
-    private val repository: CountryRepository = mockk()
+    private val usecase: CountryUseCase = mockk()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = CountryDetailViewModel(repository)
+        viewModel = CountryDetailViewModel(usecase)
     }
 
     @After
@@ -41,14 +41,11 @@ class CountryDetailViewModelTest {
     @Test
     fun `loadCountryDetails should update state with country data on success`() = runTest {
         // Given
-        val mockCountry = Country(
-            name = Country.Name("Germany"),
-            capital = listOf("Berlin"),
-            population = 80_000_000,
-            area = 357_000.0,
-            flag = "🇩🇪"
+        val mockCountry = listOf(
+            Country(Country.Name("Germany"), listOf("Berlin"), 80000000, 357000.0, "🇩🇪")
         )
-        coEvery { repository.loadCountryDetails("Germany") } returns Result.success(mockCountry)
+
+        coEvery { usecase.loadCountryDetails("Germany") } returns Result.success(mockCountry)
 
         // When
         viewModel.loadCountryDetails("Germany")
@@ -57,7 +54,7 @@ class CountryDetailViewModelTest {
         // Then
         val state = viewModel.state.value
         assertFalse(state.isLoading)
-        assertEquals(mockCountry, state.country)
+        assertEquals(mockCountry.firstOrNull(), state.country)
         assertNull(state.error)
     }
 
@@ -65,7 +62,7 @@ class CountryDetailViewModelTest {
     fun `loadCountryDetails should update state with error message on failure`() = runTest {
         // Given
         val errorMessage = "Network error"
-        coEvery { repository.loadCountryDetails("Germany") } returns Result.failure(Exception(errorMessage))
+        coEvery { usecase.loadCountryDetails("Germany") } returns Result.failure(Exception(errorMessage))
 
         // When
         viewModel.loadCountryDetails("Germany")

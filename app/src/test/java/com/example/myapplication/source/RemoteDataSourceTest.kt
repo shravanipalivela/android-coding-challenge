@@ -2,7 +2,6 @@ package com.example.myapplication.source
 
 import com.example.myapplication.data.Utils.Logger
 import com.example.myapplication.data.api.CountriesService
-import com.example.myapplication.data.mapper.toCountry
 import com.example.myapplication.data.model.CountryDto
 import com.example.myapplication.data.source.RemoteDataSourceImpl
 import io.mockk.coEvery
@@ -42,7 +41,7 @@ class RemoteDataSourceTest() {
         coEvery{apiService.getCountries()} returns(mockCountries)
 
         //When
-        val result = remoteDataSourceImpl.fetchCountries()
+        val result = remoteDataSourceImpl.fetchCountriesDto()
 
         //Then
         assertTrue(result.isSuccess)
@@ -56,7 +55,7 @@ class RemoteDataSourceTest() {
         coEvery { apiService.getCountries() } throws SocketTimeoutException("Timeout")
 
         //When
-        val result = remoteDataSourceImpl.fetchCountries()
+        val result = remoteDataSourceImpl.fetchCountriesDto()
 
         //Then
         assertTrue(result.isFailure)
@@ -69,7 +68,7 @@ class RemoteDataSourceTest() {
         coEvery { apiService.getCountries() } throws SSLHandshakeException("Network error")
 
         //When
-        val result = remoteDataSourceImpl.fetchCountries()
+        val result = remoteDataSourceImpl.fetchCountriesDto()
 
         //Then
         assertTrue(result.isFailure)
@@ -82,7 +81,7 @@ class RemoteDataSourceTest() {
         coEvery { apiService.getCountries() } throws SSLHandshakeException("SSL Handshake failed. Check API SSL certificate.")
 
         //When
-        val result = remoteDataSourceImpl.fetchCountries()
+        val result = remoteDataSourceImpl.fetchCountriesDto()
 
         //Then
         assertTrue(result.isFailure)
@@ -96,15 +95,14 @@ class RemoteDataSourceTest() {
             CountryDto(CountryDto.Name("Germany"), listOf("Berlin"), 80000000, 357000.0, "🇩🇪")
         )
 
-
         //When
         coEvery{apiService.getCountryByName("Germany")} returns mockCountries
 
         //Then
-        val result = remoteDataSourceImpl.fetchCountryByName("Germany")
+        val result = remoteDataSourceImpl.fetchCountryDtoByName("Germany")
 
         assertTrue(result.isSuccess)
-        assertEquals(mockCountries[0].toCountry(), result.getOrNull())
+        assertEquals(mockCountries[0], result.getOrNull()?.firstOrNull())
     }
 
 
