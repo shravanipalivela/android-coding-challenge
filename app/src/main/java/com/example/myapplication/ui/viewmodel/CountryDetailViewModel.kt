@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.CountryDetailState
 import com.example.myapplication.data.repository.CountryRepository
+import com.example.myapplication.domain.usecase.CountryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CountryDetailViewModel @Inject constructor(private val countryRepository: CountryRepository) :
+class CountryDetailViewModel @Inject constructor(private val countryUseCase: CountryUseCase) :
     ViewModel() {
 
     private val _state = MutableStateFlow<CountryDetailState>(CountryDetailState())
@@ -23,12 +24,12 @@ class CountryDetailViewModel @Inject constructor(private val countryRepository: 
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
 
-            val result = countryRepository.loadCountryDetails(countryName)
+            val result = countryUseCase.loadCountryDetails(countryName)
 
             if (result.isSuccess) {
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    country = result.getOrNull(),
+                    country = result.getOrNull()?.firstOrNull(),
                     error = null
                 )
             } else {

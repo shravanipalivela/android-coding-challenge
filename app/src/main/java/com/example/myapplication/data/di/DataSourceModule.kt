@@ -8,6 +8,8 @@ import com.example.myapplication.data.repository.CountryRepository
 import com.example.myapplication.data.repository.CountryRepositoryImpl
 import com.example.myapplication.data.source.RemoteDataSource
 import com.example.myapplication.data.source.RemoteDataSourceImpl
+import com.example.myapplication.domain.usecase.CountryUseCase
+import com.example.myapplication.domain.usecase.CountryUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,6 +51,12 @@ object DataSourceModule {
     fun provideCountryRepository(remoteDataSource: RemoteDataSource): CountryRepository {
         return CountryRepositoryImpl(remoteDataSource)
     }
+
+    @Provides
+    fun provideCountryUseCase(repository: CountryRepository): CountryUseCase {
+        return CountryUseCaseImpl(repository)
+    }
+
 
     @Provides
     internal fun provideCountriesService(): CountriesService {

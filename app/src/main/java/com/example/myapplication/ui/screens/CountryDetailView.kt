@@ -35,8 +35,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.myapplication.data.model.Country
+import com.example.myapplication.domain.model.Country
 import com.example.myapplication.ui.viewmodel.CountryDetailViewModel
+import com.example.myapplication.ui.components.ErrorIndicator
+import com.example.myapplication.ui.components.LoadingScreen
 
 
 @Composable

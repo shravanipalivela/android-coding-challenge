@@ -2,8 +2,6 @@ package com.example.myapplication.data.source
 
 import com.example.myapplication.data.Utils.Logger
 import com.example.myapplication.data.api.CountriesService
-import com.example.myapplication.data.mapper.toCountry
-import com.example.myapplication.data.model.Country
 import com.example.myapplication.data.model.CountryDto
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -15,7 +13,7 @@ class RemoteDataSourceImpl @Inject constructor(
     private val logger: Logger
 ) :
     RemoteDataSource {
-    override suspend fun fetchCountries(): Result<List<CountryDto>> {
+    override suspend fun fetchCountriesDto(): Result<List<CountryDto>> {
         return try {
             Result.success(apiService.getCountries())
         } catch (e: SocketTimeoutException) {
@@ -33,17 +31,11 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchCountryByName(name: String): Result<Country> {
+    override suspend fun fetchCountryDtoByName(name: String): Result<List<CountryDto>> {
         return try {
-            val response = apiService.getCountryByName(name) // Returns List<CountryDto>
-            val dto = response.firstOrNull()
-            if (dto != null) {
-                Result.success(dto.toCountry())
-            } else {
-                Result.failure(Exception("Country not found"))
-            }
+            Result.success(apiService.getCountryByName(name))
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception("Country not found"))
         }
     }
 }

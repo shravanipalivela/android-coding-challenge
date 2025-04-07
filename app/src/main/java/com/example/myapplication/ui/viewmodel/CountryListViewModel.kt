@@ -3,7 +3,7 @@ package com.example.myapplication.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.CountryState
-import com.example.myapplication.data.repository.CountryRepository
+import com.example.myapplication.domain.usecase.CountryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CountryListViewModel @Inject constructor(
-    private val repository: CountryRepository,
+    private val countryUseCase: CountryUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) :
     ViewModel() {
@@ -31,7 +31,7 @@ class CountryListViewModel @Inject constructor(
     fun loadCountries() {
         viewModelScope.launch(dispatcher) {
             _countriesState.value = _countriesState.value.copy(isLoading = true)
-            val countries = repository.loadCountries()
+            val countries = countryUseCase.loadCountries()
             if (countries.isSuccess) {
                 _countriesState.value = _countriesState.value.copy(
                     isLoading = false,

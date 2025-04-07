@@ -1,31 +1,42 @@
 package com.example.myapplication.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.testTag
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import com.example.myapplication.data.model.CountryDto
-import com.example.myapplication.ui.viewmodel.CountryListViewModel
-import  androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.myapplication.domain.model.Country
+import com.example.myapplication.ui.components.ErrorIndicator
+import com.example.myapplication.ui.components.LoadingScreen
+import com.example.myapplication.ui.viewmodel.CountryListViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -68,36 +79,12 @@ fun CountriesListView(
     }
 }
 
-@Composable
-fun ErrorIndicator(error: String?) {
-    error?.let { errorMessage ->
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(
-                text = "Error: $errorMessage",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-    }
-}
+
+
+
 
 @Composable
-fun LoadingScreen(isVisible: Boolean, modifier: Modifier = Modifier) {
-    if (isVisible) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag("loadingIndicator"),
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
-}
-
-@Composable
-fun CountryStateListView(countriesList: List<CountryDto>, navController: NavController) {
+fun CountryStateListView(countriesList: List<Country>, navController: NavController) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = { AppHeader() }) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(countriesList) { item ->
@@ -123,7 +110,7 @@ fun AppHeader() {
 }
 
 @Composable
-fun CountryCard(country: CountryDto, navController: NavController, modifier: Modifier = Modifier) {
+fun CountryCard(country: Country, navController: NavController, modifier: Modifier = Modifier) {
     ElevatedCard(
         modifier = modifier
             .padding(16.dp)
