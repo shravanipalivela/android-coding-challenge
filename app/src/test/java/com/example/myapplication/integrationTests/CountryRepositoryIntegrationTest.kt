@@ -1,6 +1,6 @@
 package com.example.myapplication.integrationTests
 
-import com.example.myapplication.data.Utils.Logger
+import com.example.myapplication.data.utils.Logger
 import com.example.myapplication.data.api.CountriesService
 import com.example.myapplication.data.repository.CountryRepositoryImpl
 import com.example.myapplication.data.source.RemoteDataSourceImpl

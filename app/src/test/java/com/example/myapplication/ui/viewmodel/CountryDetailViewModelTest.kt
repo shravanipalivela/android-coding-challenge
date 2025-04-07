@@ -2,6 +2,7 @@ package com.example.myapplication.ui.viewmodel
 
 import com.example.myapplication.domain.model.Country
 import com.example.myapplication.domain.usecase.CountryUseCase
+import com.example.myapplication.ui.screens.detailview.CountryDetailViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

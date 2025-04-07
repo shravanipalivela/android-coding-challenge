@@ -1,6 +1,6 @@
 package com.example.myapplication.source
 
-import com.example.myapplication.data.Utils.Logger
+import com.example.myapplication.data.utils.Logger
 import com.example.myapplication.data.api.CountriesService
 import com.example.myapplication.data.model.CountryDto
 import com.example.myapplication.data.source.RemoteDataSourceImpl

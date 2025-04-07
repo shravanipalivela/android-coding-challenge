@@ -1,9 +1,7 @@
-package com.example.myapplication.ui.viewmodel
+package com.example.myapplication.ui.screens.detailview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.model.CountryDetailState
-import com.example.myapplication.data.repository.CountryRepository
 import com.example.myapplication.domain.usecase.CountryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +15,8 @@ import javax.inject.Inject
 class CountryDetailViewModel @Inject constructor(private val countryUseCase: CountryUseCase) :
     ViewModel() {
 
-    private val _state = MutableStateFlow<CountryDetailState>(CountryDetailState())
-    val state: StateFlow<CountryDetailState> = _state.asStateFlow()
+    private val _state = MutableStateFlow<CountryDetailUiState>(CountryDetailUiState())
+    val state: StateFlow<CountryDetailUiState> = _state.asStateFlow()
 
     fun loadCountryDetails(countryName: String) {
         viewModelScope.launch {

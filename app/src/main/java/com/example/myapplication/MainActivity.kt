@@ -10,8 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.myapplication.ui.screens.CountriesListView
-import com.example.myapplication.ui.screens.CountryDetailView
+import com.example.myapplication.ui.screens.listview.CountriesListView
+import com.example.myapplication.ui.screens.detailview.CountryDetailView
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 

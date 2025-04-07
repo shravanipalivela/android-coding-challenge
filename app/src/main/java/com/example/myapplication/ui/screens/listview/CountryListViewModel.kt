@@ -1,8 +1,7 @@
-package com.example.myapplication.ui.viewmodel
+package com.example.myapplication.ui.screens.listview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.model.CountryState
 import com.example.myapplication.domain.usecase.CountryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,8 +20,8 @@ class CountryListViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _countriesState = MutableStateFlow<CountryState>(CountryState())
-    val countriesState: StateFlow<CountryState> = _countriesState.asStateFlow()
+    private val _countriesState = MutableStateFlow<CountryListUiState>(CountryListUiState())
+    val countriesState: StateFlow<CountryListUiState> = _countriesState.asStateFlow()
 
     init {
         loadCountries()
@@ -35,7 +34,7 @@ class CountryListViewModel @Inject constructor(
             if (countries.isSuccess) {
                 _countriesState.value = _countriesState.value.copy(
                     isLoading = false,
-                    countries = countries.getOrThrow(),
+                    countries = countries.getOrDefault(emptyList()),
                     error = null
                 )
             } else {

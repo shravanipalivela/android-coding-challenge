@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.screens
+package com.example.myapplication.ui.screens.listview
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,6 @@ import androidx.navigation.NavController
 import com.example.myapplication.domain.model.Country
 import com.example.myapplication.ui.components.ErrorIndicator
 import com.example.myapplication.ui.components.LoadingScreen
-import com.example.myapplication.ui.viewmodel.CountryListViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

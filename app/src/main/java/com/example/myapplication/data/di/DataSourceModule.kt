@@ -1,8 +1,8 @@
 package com.example.myapplication.data.di
 
-import com.example.myapplication.data.Utils.AndroidLogger
-import com.example.myapplication.data.Utils.Constants
-import com.example.myapplication.data.Utils.Logger
+import com.example.myapplication.data.utils.AndroidLogger
+import com.example.myapplication.data.utils.Constants
+import com.example.myapplication.data.utils.Logger
 import com.example.myapplication.data.api.CountriesService
 import com.example.myapplication.data.repository.CountryRepository
 import com.example.myapplication.data.repository.CountryRepositoryImpl
