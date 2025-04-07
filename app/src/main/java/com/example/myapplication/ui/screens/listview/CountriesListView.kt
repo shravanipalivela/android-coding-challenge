@@ -46,11 +46,13 @@ fun CountriesListView(
     val countriesState by viewModel.countriesState.collectAsState()
 
     // Pull refresh state
-    val pullRefreshState = rememberPullRefreshState(refreshing = countriesState.isLoading,onRefresh = { viewModel.loadCountries() })
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = countriesState.isLoading,
+        onRefresh = { viewModel.loadCountries() })
 
     // Trigger fetching countries when the screen is first launched
-    LaunchedEffect(Unit)  {
-            viewModel.loadCountries()
+    LaunchedEffect(Unit) {
+        viewModel.loadCountries()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -79,9 +81,6 @@ fun CountriesListView(
 }
 
 
-
-
-
 @Composable
 fun CountryStateListView(countriesList: List<Country>, navController: NavController) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = { AppHeader() }) { innerPadding ->
@@ -100,12 +99,14 @@ fun CountryStateListView(countriesList: List<Country>, navController: NavControl
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppHeader() {
-   TopAppBar(title = {
-       Text("Fun With Countries")
-   },colors = TopAppBarDefaults.largeTopAppBarColors(
-       containerColor = MaterialTheme.colorScheme.primary,
-       titleContentColor = MaterialTheme.colorScheme.onPrimary
-   ))
+    TopAppBar(
+        title = {
+            Text("Fun With Countries")
+        }, colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
 }
 
 @Composable
