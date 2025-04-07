@@ -34,7 +34,7 @@ If more time is needed you might go overboard. Remember you can also comment ope
 
 ## Testing Approach
 
-The testing approach follows the **Test Pyramid** principle, which emphasizes having fewer E2E tests and more unit tests for better maintainability and reliability.
+The testing approach follows the **Test Pyramid** principle, which emphasizes having fewer E2E tests and more unit tests for better maintainability.
 
 ### E2E Tests
 These tests simulate real user journeys and interactions within the app.
@@ -66,8 +66,15 @@ Unit tests are written for individual components to ensure their correctness.
 ### Integration Tests
 Integration tests validate the integration of multiple components working together.
 
-1. **CompanyRepositoryIntegrationTest**:  
+**Integration Tests Implemented:**
+
+1. `CompanyRepositoryIntegrationTest`
    This test validates the integration of `CountryRepository` and `RemoteDataSource`.
+
+**Integration Tests tobe Implemented:**
+
+2. `ViewModelIntegrationTest`
+   This test will validate the integration of `ViewModel`,`CountryRepository` and `RemoteDataSource`
 
 ---
 
